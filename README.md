@@ -1,6 +1,6 @@
 # Mass Email Automation
 
-Send certificates and emails to many people at once using Gmail.
+Send emails to many people at once using Gmail. Attach certificates, documents, or any files you need to send in bulk.
 
 ---
 
@@ -22,9 +22,11 @@ Send certificates and emails to many people at once using Gmail.
 | John Doe | john@example.com |
 | Jane Smith | jane@example.com |
 
-**Add certificates** named like this:
+**Add attachments** (optional) named like this:
 - `john_doe_certificate.png`
 - `jane_smith_certificate.png`
+
+Or use any other files you want to attach (PDFs, documents, etc.)
 
 ### Step 3: Update the Script
 
@@ -70,7 +72,7 @@ pip install openpyxl
 |---------|-----|
 | "Can't find name/email" | Check Excel has headers in row 1 |
 | "Auth failed" | Use App Password, not regular Gmail password |
-| "Certificates not matching" | Name files like: `FirstName_LastName_certificate.png` |
+| "Attachments not matching" | Name files like: `FirstName_LastName_filename.ext` |
 | "No module openpyxl" | Run: `pip install openpyxl` |
 
 ---
@@ -87,10 +89,22 @@ EMAIL_SUBJECT = "Your New Subject"
 SENDER_NAME = "Your Organization"
 ```
 
-**Change email folder:**
+**Change attachments folder:**
 ```python
-CERTS_DIR = "path/to/certificates"  # Default is current folder
+CERTS_DIR = "path/to/attachments"  # Default is current folder
 ```
+
+---
+
+## Use Cases
+
+This tool works for more than just certificates:
+- **Certificates** - Send personalized certificates to participants
+- **Documents** - Distribute contracts, agreements, or PDFs
+- **Invitations** - Send personalized event invites with attachments
+- **Reports** - Email individual performance reports or statements
+- **Confirmations** - Send receipts or confirmation letters
+- **Any bulk email** - Attach any files and send to your list
 
 ---
 
