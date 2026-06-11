@@ -1,111 +1,172 @@
-# Mass Email Automation
+# Certificate Email Sender
 
-Send emails to many people at once using Gmail. Attach certificates, documents, or any files you need to send in bulk.
+A Python script to automatically send certificate PNG files to participants via email using Gmail SMTP.
 
----
+## Overview
 
-## Quick Start (3 Steps)
+This project provides two scripts for sending certificates to workshop participants:
 
-### Step 1: Set Up Gmail
+- **`send_certificates_final.py`** - Production script using `Participants.xlsx`
+- **`send_certificates_test.py`** - Testing script using `participants2.xlsx`
 
-1. Open [Google Account Security](https://myaccount.google.com/security)
-2. Turn on **2-Step Verification** if not already on
-3. Go to **App passwords** → Select Mail → Select your device
-4. Copy the 16-character password Google gives you
+The scripts match participant names from an Excel file with certificate PNG files in the folder, then automatically send them via email with professional HTML-formatted email templates.
 
-### Step 2: Prepare Your Files
+## Features
 
-**Create `Participants.xlsx`** in the same folder as the script:
+✅ Reads participant data from Excel files  
+✅ Matches participant names with certificate PNG files  
+✅ Sends certificates via Gmail SMTP with attachments  
+✅ Professional HTML email templates  
+✅ Fuzzy name matching for better accuracy  
+✅ Dry-run mode to preview matches before sending  
+✅ Detailed logging and error handling  
 
+## Requirements
+
+- Python 3.6+
+- `openpyxl` - For reading Excel files
+
+## Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/certificate-email-sender.git
+   cd certificate-email-sender
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pip install openpyxl
+   ```
+
+## Setup
+
+### Gmail App Password
+
+To use this script, you need to set up an **App Password** on your Google account:
+
+1. Go to [Google Account Security](https://myaccount.google.com/security)
+2. Enable **2-Step Verification** (if not already enabled)
+3. Go to **App Passwords** and create a new app password
+4. Copy the 16-character code
+
+### Configuration
+
+Edit the CONFIG section in your chosen script (`send_certificates_final.py` or `send_certificates_test.py`):
+
+```python
+SENDER_NAME     = "Your Organization Name"
+SENDER_EMAIL    = "your-email@gmail.com"
+SENDER_PASSWORD = "your-16-char-app-password"
+XLSX_FILE       = "Participants.xlsx"          # Path to Excel file
+CERTS_DIR       = "."                          # Folder containing certificates
+DRY_RUN         = True                         # Preview mode (set False to send)
+```
+
+## Excel File Format
+
+Your Excel file should have the following columns:
+- **Name** - Participant's name (used to match certificates)
+- **Email** - Participant's email address
+
+Example:
 | Name | Email |
 |------|-------|
 | John Doe | john@example.com |
 | Jane Smith | jane@example.com |
 
-**Add attachments** (optional) named like this:
-- `john_doe_certificate.png`
-- `jane_smith_certificate.png`
+## Certificate File Naming
 
-Or use any other files you want to attach (PDFs, documents, etc.)
-
-### Step 3: Update the Script
-
-Open `send_certificates_final.py` and change:
-
-```python
-SENDER_NAME     = "Your Name"
-SENDER_EMAIL    = "your-email@gmail.com"
-SENDER_PASSWORD = "xxxx xxxx xxxx xxxx"  # Your 16-char password from Step 1
+Certificate PNG files should match participant names in the format:
+```
+John Doe.png
+Jane Smith.png
 ```
 
----
+The script uses fuzzy matching, so minor variations are tolerated.
 
-## Run It
+## Usage
 
-**First Time (Test Mode):**
+### Step 1: Preview Matches (Dry Run)
+
+Always test first with `DRY_RUN = True` to verify name-to-certificate matching:
+
 ```bash
 python send_certificates_final.py
 ```
-This shows what will be sent without actually sending. Check if everything looks good.
 
-**Second Time (Send for Real):**
-1. Open the script
-2. Change `DRY_RUN = False`
-3. Run again: `python send_certificates_final.py`
+This will show you:
+- Matched certificates
+- Email addresses
+- Any unmatched participants
 
-Done! Emails are sent.
+### Step 2: Send Certificates
 
----
+Once you've verified the matches, set `DRY_RUN = False`:
 
-## Install Python Package
+```python
+DRY_RUN = False
+```
 
-Before running, install openpyxl:
+Then run the script:
+
 ```bash
-pip install openpyxl
+python send_certificates_final.py
 ```
+
+## Email Template
+
+The script sends emails with:
+- **Professional HTML formatting** with your organization's branding
+- **Plain text fallback** for email clients that don't support HTML
+- **Certificate attached** as PNG file
+- **Custom subject line** (configurable)
+
+## Troubleshooting
+
+**Gmail authentication failed:**
+- Verify you're using an **App Password**, not your regular Gmail password
+- Ensure 2-Step Verification is enabled on your account
+- Check that the 16-character password is copied correctly
+
+**Certificates not found:**
+- Ensure certificate PNG files are in the same folder as the script
+- Check that file names match participant names
+- The script uses fuzzy matching, but exact matches are preferred
+
+**No matches found:**
+- Verify participant names in Excel match certificate file names
+- Check for extra spaces or special characters
+- The fuzzy matching tolerance is ~80% similarity
+
+## File Structure
+
+```
+├── send_certificates_final.py    # Production script
+├── send_certificates_test.py     # Testing script
+├── Participants.xlsx              # Production participant list
+├── participants2.xlsx             # Test participant list
+├── certificates/                  # Certificate PNG files
+└── README.md                       # This file
+```
+
+## Security Notes
+
+⚠️ **Important:** Never commit credentials to version control!
+
+- Add `send_certificates_*.py` to `.gitignore` after removing passwords
+- Use environment variables or a separate config file for sensitive data
+- Regenerate App Passwords after committing them
+
+## License
+
+This project is provided as-is for educational and organizational use.
+
+## Support
+
+For issues or questions, please create an issue in the repository.
 
 ---
 
-## Problems?
-
-| Problem | Fix |
-|---------|-----|
-| "Can't find name/email" | Check Excel has headers in row 1 |
-| "Auth failed" | Use App Password, not regular Gmail password |
-| "Attachments not matching" | Name files like: `FirstName_LastName_filename.ext` |
-| "No module openpyxl" | Run: `pip install openpyxl` |
-
----
-
-## Want to Change?
-
-**Change subject line:**
-```python
-EMAIL_SUBJECT = "Your New Subject"
-```
-
-**Change sender name in email:**
-```python
-SENDER_NAME = "Your Organization"
-```
-
-**Change attachments folder:**
-```python
-CERTS_DIR = "path/to/attachments"  # Default is current folder
-```
-
----
-
-## Use Cases
-
-This tool works for more than just certificates:
-- **Certificates** - Send personalized certificates to participants
-- **Documents** - Distribute contracts, agreements, or PDFs
-- **Invitations** - Send personalized event invites with attachments
-- **Reports** - Email individual performance reports or statements
-- **Confirmations** - Send receipts or confirmation letters
-- **Any bulk email** - Attach any files and send to your list
-
----
-
-Done! Questions? Check the code comments or try dry-run mode first.
+**Created for:** GDGoC TCOER Workshop  
+**Purpose:** Automated certificate distribution for workshop participants
